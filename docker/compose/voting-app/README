@@ -1,0 +1,22 @@
+####### https://github.com/dockersamples/example-voting-app #######
+
+Each component in our application are called services in docker term.We have five services in our application.
+
+1. voting-app : Front-end of the application written in python flask framework, which allows the users to cast their votes.
+
+2. redis : An in-memory data structure store, used as a temporary database to store the votes casted by the users.
+
+3. worker : service written in .NET, that retrieves the votes data from redis and stores it into PostgreSQL DB service.
+
+4. postgreSQL DB : PostgreSQL DB used as persistent storage database.
+
+5. result-app : service written in node js, displays the voting results to the user.
+
+There are many options when it comes to how we can deploy a dockerized application. We are going to look at deploying the application using docker-compose.
+
+Docker-Compose:
+Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
+
+The voting app repository can be cloned from git. Inside the app’s root directory(example-voting-app) we can find the docker-compose.yml file and sub-directories for each services containing their respective configuration codes.We don’t have to be familiar with all the stacks(like flask, redis, .NET, node.js) in order for us to understand the docker concepts. An high level understanding on what each service is doing and how they are related to each other is enough, we should be able to understand the docker concepts.
+
+As mentioned in docker-compose definition, all our app configuration is specified in a yaml file named docker-compose.yml which can be found in app’s root directory. This file is the starting point from where docker begins to build our application. Lets go through the contents of the file.

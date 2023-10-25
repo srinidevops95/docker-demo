@@ -1,0 +1,47 @@
+Wordpress on kubernates - https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/ 
+
+# Setup Wordpress application
+
+# deploy DB container
+docker run -it -d --name mysql \
+-e MYSQL_ROOT_PASSWORD=wordpress \
+-e MYSQL_DATABASE=wordpress \
+-e MYSQL_USER=wordpress \
+-e MYSQL_PASSWORD=wordpress mysql:5.7
+
+#deploy wordpress container
+docker run --name wordpress -p 8080:80 -d wordpress
+
+# create a new docker network
+docker network create --attachable wordpress-network
+
+# attach both db & wordpress container to docker network
+docker network connect wordpress-network mysql
+docker network connect wordpress-network wordpress
+
+
+Now hit the URL - 
+
+yLn5@Y8dFcMU&vFz&)
+
+
+=====================================================================
+
+docker network create –driver bridge my_net 
+docker volume create mysql-data
+
+docker run --name wordpress –p 8080:80 –v ./wordpress-data:/var/www/html \
+–net my_net –e WORDPRESS_DB_HOST = mysql \
+-e WORDPRESS_DB_NAME: wordpress \
+-e WORDPRESS_DB_USER: wordpress \
+-e WORDPRESS_DB_PASSWORD: wordpress \
+wordpress
+
+docker run --name wordpress –p 3306 –v mysql-data:/var/lib/mysql –net my_net 
+-e MYSQL_ROOT_PASSWORD: wordpress \
+-e MYSQL_DATABASE: wordpress \
+-e MYSQL_USER: wordpress \
+-e MYSQL_PASSWORD: wordpress \
+mariadb
+
+
