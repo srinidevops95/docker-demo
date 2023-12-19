@@ -1,0 +1,54 @@
+ocker run -d -p 8091-8093:8091-8093 couchbase
+
+
+docker run -d \
+    -p 8091-8093:8091-8093 \
+    -e COUCHBASE_ADMINISTRATOR_USERNAME=Administrator \
+    -e COUCHBASE_ADMINISTRATOR_PASSWORD=password \
+    -e COUCHBASE_BUCKET=default \
+    -e COUCHBASE_BUCKET_PASSWORD= \
+    --network="docker_default" \
+    --name couchbase1 custom-couchbase
+
+
+docker network create –driver bridge my_net
+docker volume create mysql-data
+
+docker run --name wordpress –p 8080:80 –v ./wordpress-data:/var/www/html \
+–net my_net –e WORDPRESS_DB_HOST = mysql \
+-e WORDPRESS_DB_NAME: wordpress \
+-e WORDPRESS_DB_USER: wordpress \
+-e WORDPRESS_DB_PASSWORD: wordpress \
+wordpress
+
+docker run --name wordpress –p 3306 –v mysql-data:/var/lib/mysql –net my_net
+-e MYSQL_ROOT_PASSWORD: wordpress \
+-e MYSQL_DATABASE: wordpress \
+-e MYSQL_USER: wordpress \
+-e MYSQL_PASSWORD: wordpress \
+mariadb
+
+
+
+
+Redis:
+docker run -d --name=redis redis:alpine
+
+PostgreSQL
+docker run -d --name=db -e POSTGRES_USER='postgres' -e POSTGRES_PASSWORD='postgres' postgres:15-alpine
+
+voting app:
+docker run -d --name=voting-app -p 5000:80 dockersamples/examplevotingapp_vote
+
+result:
+docker run -d --name=result-app -p 5001:80 dockersamples/examplevotingapp_result
+
+worker:
+docker run -d --name=worker dockersamples/examplevotingapp_worker
+
+docker run --links:
+docker run -d --name=redis redis:alpine
+docker run -d --name=db -e POSTGRES_USER='postgres' -e POSTGRES_PASSWORD='postgres' postgres:15-alpine
+docker run -d --name=vote -p 5000:80 --link redis:redis dockersamples/examplevotingapp_vote
+docker run -d --name=result -p 5001:80 --link db:db dockersamples/examplevotingapp_result
+docker run -d --name=worker --link db:db --link redis:redis dockersamples/examplevotingapp_worker
