@@ -14,20 +14,19 @@ docker run -d \
 docker network create –driver bridge my_net
 docker volume create mysql-data
 
-docker run --name wordpress –p 8080:80 –v ./wordpress-data:/var/www/html \
-–net my_net –e WORDPRESS_DB_HOST = mysql \
--e WORDPRESS_DB_NAME: wordpress \
--e WORDPRESS_DB_USER: wordpress \
--e WORDPRESS_DB_PASSWORD: wordpress \
-wordpress
 
-docker run --name wordpress –p 3306 –v mysql-data:/var/lib/mysql –net my_net
--e MYSQL_ROOT_PASSWORD: wordpress \
--e MYSQL_DATABASE: wordpress \
--e MYSQL_USER: wordpress \
--e MYSQL_PASSWORD: wordpress \
-mariadb
+docker run -d --name mysql -v ./mysql-data:/var/lib/mysql --net my_net  \
+-e MYSQL_ROOT_PASSWORD=welcome@123  \
+-e MYSQL_DATABASE=wordpress  \
+ -e MYSQL_USER=wordpress   \
+ -e MYSQL_PASSWORD=wordpress -p 3306  mariadb
 
+
+docker run -d --name=wordpress -v ./wordpress-data:/var/www/html  --net=my_net \
+-e WORDPRESS_DB_HOST=mysql:3306 
+-e WORDPRESS_DB_NAME=wordpress \
+-e WORDPRESS_DB_USER=wordpress \
+-e WORDPRESS_DB_PASSWORD=wordpress -p 8080:80 wordpress
 
 
 
